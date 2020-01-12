@@ -10,5 +10,6 @@ CONSTANTS = {
     'ENDPOINT': {
         'GRID': '/api/grid',
         'LIST': '/api/list',
-    }
+    },
+    'MAX_NUM_RESULTS': 500
 }
