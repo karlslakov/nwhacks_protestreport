@@ -7,8 +7,8 @@ from secrets import SECRETS
 import datetime
 
 DATE_RANGE_HALF = datetime.timedelta(days=3)
-# RADII = [5, 25, -1]
-RADII = [20]
+RADII = [5, 25, -1]
+# RADII = [20]
 RESULTS_PER_BATCH = 100
 MAX_BATCHES = 1
 
@@ -17,6 +17,13 @@ client = AppClient(SECRETS['CONSUMER_KEY'],
 client.get_access_token()
 
 def make_report(keywords, date_string, latitude, longitude):
+    import pickle
+    results = None
+    with open("sample_data.tweetresults", "rb") as sample_data_file:
+        results = pickle.load(sample_data_file)
+    return results
+
+def make_report_real(keywords, date_string, latitude, longitude):
     date = datetime.datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%fZ')
     date_start = date - DATE_RANGE_HALF
     date_end = date + DATE_RANGE_HALF
@@ -64,4 +71,8 @@ def talk_to_twitter(keywords, date_start, date_end, latitude, longitude, radius)
         
     return all_responses
 
-# make_report('dad,mom',"2020-01-05T19:30:03.283Z", 49.265, -123.156054)
+# results = make_report('new year,new year\'s eve,2020,"new year"',"2020-01-01T00:00:01.283Z", 49.265, -123.156054)
+# import pickle
+
+# with open('sample_data.tweetresults', 'wb') as sample_data_file:
+#  pickle.dump(results, sample_data_file)
