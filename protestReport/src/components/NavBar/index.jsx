@@ -12,16 +12,8 @@ export default function NavBar() {
       </div>
       <nav className="navbar navbar-expand-sm navbar-light border-bottom justify-content-between">
         <Link className="navbar-brand" to="/">
-          protestReport
+          Protest Report
         </Link>
-        <div className="navbar-nav">
-          <Link className="nav-item nav-link active" to="/">
-            List
-          </Link>
-          <Link className="nav-item nav-link active" to="Grid">
-            Grid
-          </Link>
-        </div>
       </nav>
     </React.Fragment>
   );

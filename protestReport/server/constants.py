@@ -8,7 +8,6 @@ CONSTANTS = {
         '500_INTERNAL_SERVER_ERROR': 500
     },
     'ENDPOINT': {
-        'GRID': '/api/grid',
-        'LIST': '/api/list',
+        'GETREPORT': '/api/getreport',
     }
 }

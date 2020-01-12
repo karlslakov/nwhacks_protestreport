@@ -8,6 +8,10 @@ body {
   padding: 0;
 }
 
+test {
+  background-color: #025fce !important;
+}
+
 footer {
   position: absolute;
   bottom: 0;
