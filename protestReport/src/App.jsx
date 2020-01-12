@@ -4,9 +4,9 @@ import "./App.css";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 
-import List from "./components/List";
+import DescriptionForm from "./components/DescriptionForm";
 
-import Grid from "./components/Grid";
+import Grid from "./components/ViewReport";
 
 //TODO Web Template Studio: Add routes for your new pages here.
 class App extends Component {
@@ -15,8 +15,8 @@ class App extends Component {
       <React.Fragment>
         <NavBar />
         <Switch>
-          <Route exact path = "/" component = { List } />
-          <Route path = "/Grid" component = { Grid } />
+          <Route exact path = "/" component = { DescriptionForm } />
+          <Route path = "/viewreport" component = { Grid } />
         </Switch>
         <Footer />
       </React.Fragment>

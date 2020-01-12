@@ -11,5 +11,7 @@ CONSTANTS = {
         'GRID': '/api/grid',
         'LIST': '/api/list',
     },
-    'MAX_NUM_RESULTS': 500
+    'MAX_NUM_RESULTS': 500,
+    'GETREPORT': '/api/getreport',
 }
+
