@@ -11,6 +11,7 @@ export default class Grid extends Component {
       super(props)
       this.state = {
         tweets: {},
+        sentimentByDate: {},
         responseReceived: false,
         warningMessageOpen: false,
         warningMessageText: ""
@@ -37,7 +38,10 @@ export default class Grid extends Component {
         return response.json();
       })
       .then(result => {
-        this.setState({ tweets: result, responseReceived: true });
+          this.setState({
+            tweets: result,
+            sentimentByDate: this.averageSentimentByDate(result),
+            responseReceived: true });
         })
       .catch(error =>
         this.setState({
@@ -54,24 +58,24 @@ export default class Grid extends Component {
     });
   }
 
-  averageSentimentByDate = () => {
+  averageSentimentByDate = (tweets) => {
     var sentimentByDate = {};
-    for (var radiusGroup in this.state.tweets){
+    for (var radiusGroup in tweets){
       sentimentByDate[radiusGroup] = {};
-      this.state.tweets.radiusGroup.foreach((t) => {
-        var dateObj = Date.parseDate(t.date);
-        var dateKey = dateObj.getYear() * 10000 + dateObj.getMonth() * 100 + dateObj.getDate();
+      tweets[radiusGroup].forEach((t) => {
+        var dateObj = new Date(Date.parse(t["date"]));
+        var dateKey = dateObj.getFullYear() * 10000 + dateObj.getMonth() * 100 + dateObj.getDate();
         if (! (dateKey in sentimentByDate[radiusGroup])) {
           sentimentByDate[radiusGroup][dateKey] = {};
           sentimentByDate[radiusGroup][dateKey]["score"] = 0;
           sentimentByDate[radiusGroup][dateKey]["count"] = 0;
         } 
-        sentimentByDate[radiusGroup][dateKey]["score"] += t.sentiment_info.compound;
+        sentimentByDate[radiusGroup][dateKey]["score"] += t["sentiment_info"]["compound"];
         sentimentByDate[radiusGroup][dateKey]["count"] += 1;
-      })
-      sentimentByDate[radiusGroup].foreach((dateKey)=> {
+      });
+      for (var dateKey in sentimentByDate[radiusGroup]) {
         sentimentByDate[radiusGroup][dateKey]["score"] /= sentimentByDate[radiusGroup][dateKey]["count"];
-      })
+      }
     }
     return sentimentByDate;
   }
@@ -91,19 +95,21 @@ export default class Grid extends Component {
           <h1>Protest Report</h1>
           <p>Here's how your protest went...</p>
         </div>
-        <Plot
-        data={[
-          {
-            x: ,
-            y: [2, 6, 3],
-            type: 'scatter',
-            mode: 'lines+markers',
-            marker: {color: 'red'},
-          },
-          {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-        ]}
-        layout={ {width: 320, height: 240, title: ''} }
-        />
+        {Object.keys(this.state.sentimentByDate).map((radiusGroup) => (
+           <Plot
+           data={[
+             {
+               x: Object.keys(this.state.sentimentByDate[radiusGroup]).map((dateGroup, ind) => ind),
+               y: Object.keys(this.state.sentimentByDate[radiusGroup]).map((dateGroup) => this.state.sentimentByDate[radiusGroup][dateGroup]["score"]),
+               type: 'scatter',
+               mode: 'lines+markers',
+               marker: {color: 'red'},
+             }
+           ]}
+           layout={ {width: 620, height: 440, title: radiusGroup + "km"} }
+           />
+        ))}
+       
         <WarningMessage
           open={this.state.warningMessageOpen}
           text={this.state.warningMessageText}
