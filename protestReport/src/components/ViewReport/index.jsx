@@ -109,7 +109,9 @@ export default class Grid extends Component {
            layout={ {width: 620, height: 440, title: radiusGroup + "km"} }
            />
         ))}
-       
+       <p>
+         this.state.tweets.radglobal.reduce((soFar, t) => soFar + t.text);
+       </p>
         <WarningMessage
           open={this.state.warningMessageOpen}
           text={this.state.warningMessageText}
