@@ -12,7 +12,7 @@ app = Flask(__name__, static_folder='build')
 @app.route(CONSTANTS['ENDPOINT']['GETREPORT'], methods=["POST"])
 def get_report():
     jsonobj = request.get_json()
-    return make_report(jsonobj["keywords"], jsonobj["date"])
+    return make_report(jsonobj["keywords"], jsonobj["date"], jsonobj["latitude"], jsonobj["longitude"])
 
 # Catching all routes
 # This route is used to serve all the routes in the frontend application after deployment.

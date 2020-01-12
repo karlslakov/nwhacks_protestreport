@@ -10,7 +10,5 @@ CONSTANTS = {
     'ENDPOINT': {
         'GETREPORT': '/api/getreport',
     },
-    'MAX_NUM_RESULTS': 100,
-    'APPEND_TO_TWITTER_REQUEST': ' -filter:retweets'
 }
 
