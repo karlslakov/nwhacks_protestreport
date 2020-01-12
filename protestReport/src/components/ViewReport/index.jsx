@@ -9,7 +9,8 @@ export default class Grid extends Component {
   {
       super(props)
       this.state = {
-        response: "",
+        tweets: [],
+        responseReceived: false,
         warningMessageOpen: false,
         warningMessageText: ""
       }
@@ -34,11 +35,11 @@ export default class Grid extends Component {
         }
         return response.json();
       })
-      .then(result => this.setState({ response: JSON.stringify(result) }))
+      .then(result => this.setState({ tweets: result.tweets, responseReceived: true }))
       .catch(error =>
         this.setState({
           warningMessageOpen: true,
-          warningMessageText: `Request to get grid text failed: ${error}`
+          warningMessageText: `Failed to recieve twitter sentiment data: ${error}`
         })
       );
   }
@@ -51,6 +52,14 @@ export default class Grid extends Component {
   }
 
   render() {
+    if (!this.state.responseReceived)
+      return (
+        <main id="mainContent">
+          <div className={this.centeredHeaderStyle}>
+            <h1>Loading</h1>
+          </div>
+        </main>
+      );
     return (
       <main id="mainContent">
         <div className={this.centeredHeaderStyle}>

@@ -15,6 +15,8 @@ class DescriptionForm extends Component {
     this.state = {
       subject_keywords: "",
       date: new Date(),
+      longitude: 0,
+      latitude: 0,
       warningMessageOpen: false,
       warningMessageText: ""
     }
@@ -37,7 +39,12 @@ class DescriptionForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.history.push({ pathname: "/viewreport", state: { keywords:this.state.subject_keywords, date:this.state.date}})
+    this.props.history.push({ pathname: "/viewreport", state: { 
+        keywords:this.state.subject_keywords,
+        date:this.state.date,
+        latitude:this.state.latitude,
+        longitude: this.state.longitude}
+      });
   }
 
   handleWarningClose = () => {
@@ -72,6 +79,23 @@ class DescriptionForm extends Component {
                   onChange={this.handleDateChange}
                 />
             <br />  
+            <label>
+              Latitude
+            <input
+              name="latitude"
+              type="number"
+              value={this.state.latitude}
+              onChange={this.handleChange} />
+            </label>
+            <label>
+              Longitude
+            <input
+              name="longitude"
+              type="number"
+              value={this.state.longitude}
+              onChange={this.handleChange} />
+            </label>
+            <br />
             <button type="submit" className="btn btn-primary ml-2">
               Submit
             </button>
