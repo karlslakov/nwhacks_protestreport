@@ -1,4 +1,4 @@
-from birdy.twitter import AppClient, ApiComponent
+from birdy.twitter import AppClient
 import json
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -7,8 +7,9 @@ from secrets import SECRETS
 import datetime
 
 DATE_RANGE_HALF = datetime.timedelta(days=3)
-RADII = [5, 25, -1]
-RESULTS_PER_BATCH = 500
+# RADII = [5, 25, -1]
+RADII = [20]
+RESULTS_PER_BATCH = 100
 MAX_BATCHES = 1
 
 client = AppClient(SECRETS['CONSUMER_KEY'],
@@ -50,17 +51,17 @@ def talk_to_twitter(keywords, date_start, date_end, latitude, longitude, radius)
     query = "point_radius:[%s] %s" % (locationString, keywords) if radius != -1 else "%s" % keywords
     datestart_string = date_start.strftime("%Y%m%d%H%M")
     dateend_string = date_end.strftime("%Y%m%d%H%M")
-    response = ApiComponent(client.api.tweets.search, "30days").dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string)
+    response = client.api.tweets.search["30day"].dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string)
     all_responses = response.data.results
     batches = 1
     while batches < MAX_BATCHES:
         next_key = response.data["next"] if "next" in response.data else None
         if next_key is None:
             break
-        response = ApiComponent(client.api.tweets.search, "30days").dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string, next=next_key)
+        response = client.api.tweets.search["30day"].dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string, next=next_key)
         all_responses.extend(response.data.results)        
         batches += 1
         
     return all_responses
 
-make_report('dad,mom',"2012-05-29T19:30:03.283Z", 49.265, -123.156054)
+# make_report('dad,mom',"2020-01-05T19:30:03.283Z", 49.265, -123.156054)
