@@ -101,9 +101,9 @@ export default class Grid extends Component {
              {
                x: Object.keys(this.state.sentimentByDate[radiusGroup]).map((dateGroup, ind) => ind),
                y: Object.keys(this.state.sentimentByDate[radiusGroup]).map((dateGroup) => this.state.sentimentByDate[radiusGroup][dateGroup]["score"]),
-               type: 'scatter',
-               mode: 'lines+markers',
-               marker: {color: 'red'},
+               type: 'bar',
+               // mode: 'lines+markers',
+               // marker: {color: 'red'},
              }
            ]}
            layout={ {width: 620, height: 440, title: radiusGroup + "km"} }
