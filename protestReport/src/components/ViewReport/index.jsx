@@ -36,8 +36,9 @@ export default class Grid extends Component {
         }
         return response.json();
       })
-      .then(result => 
-        this.setState({ tweets: result, responseReceived: true }))
+      .then(result => {
+        this.setState({ tweets: result, responseReceived: true });
+        })
       .catch(error =>
         this.setState({
           warningMessageOpen: true,
@@ -51,6 +52,28 @@ export default class Grid extends Component {
       warningMessageOpen: false,
       warningMessageText: ""
     });
+  }
+
+  averageSentimentByDate = () => {
+    var sentimentByDate = {};
+    for (var radiusGroup in this.state.tweets){
+      sentimentByDate[radiusGroup] = {};
+      this.state.tweets.radiusGroup.foreach((t) => {
+        var dateObj = Date.parseDate(t.date);
+        var dateKey = dateObj.getYear() * 10000 + dateObj.getMonth() * 100 + dateObj.getDate();
+        if (! (dateKey in sentimentByDate[radiusGroup])) {
+          sentimentByDate[radiusGroup][dateKey] = {};
+          sentimentByDate[radiusGroup][dateKey]["score"] = 0;
+          sentimentByDate[radiusGroup][dateKey]["count"] = 0;
+        } 
+        sentimentByDate[radiusGroup][dateKey]["score"] += t.sentiment_info.compound;
+        sentimentByDate[radiusGroup][dateKey]["count"] += 1;
+      })
+      sentimentByDate[radiusGroup].foreach((dateKey)=> {
+        sentimentByDate[radiusGroup][dateKey]["score"] /= sentimentByDate[radiusGroup][dateKey]["count"];
+      })
+    }
+    return sentimentByDate;
   }
 
   render() {
@@ -68,7 +91,19 @@ export default class Grid extends Component {
           <h1>Protest Report</h1>
           <p>Here's how your protest went...</p>
         </div>
-        <Plot></Plot>
+        <Plot
+        data={[
+          {
+            x: ,
+            y: [2, 6, 3],
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: {color: 'red'},
+          },
+          {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
+        ]}
+        layout={ {width: 320, height: 240, title: ''} }
+        />
         <WarningMessage
           open={this.state.warningMessageOpen}
           text={this.state.warningMessageText}
