@@ -3,13 +3,14 @@ import classnames from "classnames";
 import WarningMessage from "../WarningMessage";
 import styles from "./viewreport.module.css";
 import CONSTANTS from "../../constants";
+import Plot from 'react-plotly.js';
 
 export default class Grid extends Component {
   constructor(props)
   {
       super(props)
       this.state = {
-        tweets: [],
+        tweets: {},
         responseReceived: false,
         warningMessageOpen: false,
         warningMessageText: ""
@@ -35,7 +36,8 @@ export default class Grid extends Component {
         }
         return response.json();
       })
-      .then(result => this.setState({ tweets: result.tweets, responseReceived: true }))
+      .then(result => 
+        this.setState({ tweets: result, responseReceived: true }))
       .catch(error =>
         this.setState({
           warningMessageOpen: true,
@@ -66,7 +68,7 @@ export default class Grid extends Component {
           <h1>Protest Report</h1>
           <p>Here's how your protest went...</p>
         </div>
-        <p>{this.state.response}</p> 
+        <Plot></Plot>
         <WarningMessage
           open={this.state.warningMessageOpen}
           text={this.state.warningMessageText}
