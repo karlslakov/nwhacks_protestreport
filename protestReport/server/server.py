@@ -2,7 +2,7 @@ from flask import Flask, jsonify, make_response, send_from_directory
 from flask import request
 import os
 from os.path import exists, join
-
+from make_report import make_report
 from constants import CONSTANTS
 
 
@@ -10,10 +10,9 @@ app = Flask(__name__, static_folder='build')
 
 # Grid Page Endpoint
 @app.route(CONSTANTS['ENDPOINT']['GETREPORT'], methods=["POST"])
-def get_report(body):
-    return jsonify( 
-        { 'your_mom': "stinky" }
-    )
+def get_report():
+    jsonobj = request.get_json()
+    return make_report(jsonobj["keywords"], jsonobj["date"])
 
 # Catching all routes
 # This route is used to serve all the routes in the frontend application after deployment.
