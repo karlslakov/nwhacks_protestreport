@@ -6,7 +6,7 @@ from constants import CONSTANTS
 from secrets import SECRETS
 import datetime
 
-DATE_RANGE_HALF = datetime.timedelta(days=13)
+DATE_RANGE_HALF = datetime.timedelta(days=3)
 RADII = [5, 25, -1]
 RESULTS_PER_BATCH = 500
 MAX_BATCHES = 1
