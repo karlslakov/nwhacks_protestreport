@@ -34,8 +34,6 @@ def make_report(keywords, date_string, latitude, longitude):
     for r in RADII:
         key = "rad" + str(r) if r != -1 else "global"
         result[key] = make_single_report(or_together_keywords, date_start, date_end, latitude, longitude, r)
-
-    print(result)
     return result
 
 def make_single_report(keywords, date_start, date_end, latitude, longitude, radius):
@@ -54,7 +52,7 @@ def make_single_report(keywords, date_start, date_end, latitude, longitude, radi
     return report
 
 def talk_to_twitter(keywords, date_start, date_end, latitude, longitude, radius):
-    locationString =  '%f %f %dkm' % (longitude, latitude, radius)
+    locationString =  '%s %s %dkm' % (longitude, latitude, radius)
     query = "point_radius:[%s] %s" % (locationString, keywords) if radius != -1 else "%s" % keywords
     datestart_string = date_start.strftime("%Y%m%d%H%M")
     dateend_string = date_end.strftime("%Y%m%d%H%M")
