@@ -1,4 +1,4 @@
-from birdy.twitter import AppClient
+from birdy.twitter import AppClient, ApiComponent
 import json
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -7,9 +7,9 @@ from secrets import SECRETS
 import datetime
 
 DATE_RANGE_HALF = datetime.timedelta(days=13)
-RADII = [1, 10, 100, -1]
+RADII = [5, 25, -1]
 RESULTS_PER_BATCH = 500
-MAX_TOTAL_RESULTS = 500
+MAX_BATCHES = 1
 
 client = AppClient(SECRETS['CONSUMER_KEY'],
                 SECRETS['CONSUMER_SECRET'])
@@ -46,18 +46,21 @@ def make_single_report(keywords, date_start, date_end, latitude, longitude, radi
     return report
 
 def talk_to_twitter(keywords, date_start, date_end, latitude, longitude, radius):
-    locationString =  '%f %f %dmi' % (longitude, latitude, radius)
-    query = "point_radius:[%s] %s" % (locationString, keywords)
+    locationString =  '%f %f %dkm' % (longitude, latitude, radius)
+    query = "point_radius:[%s] %s" % (locationString, keywords) if radius != -1 else "%s" % keywords
     datestart_string = date_start.strftime("%Y%m%d%H%M")
     dateend_string = date_end.strftime("%Y%m%d%H%M")
-    all_responses = []
-    response = client.api.tweets.search.fullarchive.dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string)
-    while len(all_responses) < MAX_TOTAL_RESULTS:
-        all_responses.extend(response.data.results)
+    response = ApiComponent(client.api.tweets.search, "30days").dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string)
+    all_responses = response.data.results
+    batches = 1
+    while batches < MAX_BATCHES:
         next_key = response.data["next"] if "next" in response.data else None
         if next_key is None:
             break
-        response = client.api.tweets.search.fullarchive.dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string, next=next_key)
+        response = ApiComponent(client.api.tweets.search, "30days").dev.get(query=query, maxResults=RESULTS_PER_BATCH, toDate=dateend_string, fromDate=datestart_string, next=next_key)
+        all_responses.extend(response.data.results)        
+        batches += 1
+        
     return all_responses
 
 make_report('dad,mom',"2012-05-29T19:30:03.283Z", 49.265, -123.156054)
